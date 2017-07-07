@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        body {
+
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        .header {
+            padding: 5px 5px 5px 5px;
+            height: 30px;
+            border-bottom: 0.5px solid grey;
+            background-color: lightgrey;
+            font-size: 20px;
+        }
+
+        #button_container {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        #title {
+            float: left;
+        }
+
+        .top_button {
+            float: left;
+            padding: 2px;
+            border: 1px solid grey;
+            border-right: none;
+            font-size: 100%;
+        }
+
+        .active {
+            background-color: #ffffff;
+        }
+
+        .highlight {
+            background-color: #666666;
+        }
+
+        #output {
+            border-right: 1px solid grey;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        #html {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .content {
+            height: 600px;
+            width: 100%;
+        }
+
+        textarea {
+
+            resize: none;
+            border: none;
+            font-size: 20px;
+        }
+
+        iframe {
+            resize: none;
+            border: none;
+        }
+
+        .lefttext {
+            border-right: 1px solid black;
+        }
+
+        .panel{
+            display: block;
+            float: left;
+            width: 50%;
+        }
+        #css_panel{
+            display:none;
+        }
+        #javascript_panel{
+            display: none;
+        }
+
+    </style>
+    <script type="text/javascript" src="/BBCsimulate/jquery-3.2.1.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var windownum=2;
+            var top_button = $('.top_button');
+            top_button.hover(function () {
+                $(this).addClass('highlight');
+            }, function () {
+                $(this).removeClass('highlight');
+            });
+            top_button.click(function () {
+                $(this).addClass('active')
+                $(this).removeClass('highlight');
+                var curpanel=$('#'+$(this).attr('id')+'_panel');
+                if(curpanel.hasClass('panel')){
+                    curpanel.removeClass('panel');
+                    curpanel.css('display','none');
+                    windownum--;
+                }else {
+                    curpanel.addClass('panel');
+                    curpanel.css('display','block');
+                    windownum++;
+                }
+                panel=$('.panel')
+                panel.height($(window).height()-$('.header').height()-15);
+                panel.width($(window).width()/windownum-10);
+
+            });
+            var panel=$('.panel');
+            panel.height($(window).height()-$('.header').height()-15);
+            panel.width($(window).width()/windownum-10);
+            $('textarea').on('change keyup paste',function () {
+                updateOutput();
+            });
+        });
+        function updateOutput() {
+            $("#output_panel").contents().find("html").html("<html><head><style type='text/css'>" + $("#css_panel").val() + "</style></head><body>" + $("#html_panel").val() + "</body></html>");
+            document.getElementById("output_panel").contentWindow.eval($("#javascript_panel").val());
+        }
+
+    </script>
+</head>
+<body>
+<div class="header">
+    <a id="title">Code Player</a>
+    <div id="button_container">
+        <button class="top_button active" id="html">HTML</button>
+        <button class="top_button" id="css">CSS</button>
+        <button class="top_button" id="javascript">Javascript</button>
+        <button class="top_button active" id="output">Output</button>
+    </div>
+</div>
+<div class="content">
+    <textarea id="html_panel" class="lefttext panel">
+    </textarea>
+    <textarea id="css_panel" class="lefttext">
+    </textarea>
+    <textarea id="javascript_panel" class="lefttext">
+    </textarea>
+    <iframe id="output_panel" class="panel">
+    </iframe>
+</div>
+</body>
+</html>
